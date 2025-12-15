@@ -1,0 +1,23 @@
+# Create a function that utilizes a dictionary comprehension to take in a string input and return a dictionary that lists each word
+# as the key, with the number of occurrences of that word within the text as the value.
+# Difficulty easy-intermediate
+
+# My solution:
+
+def word_freq(text):
+    clean_text = ""
+    for char in text:
+        if char.isalpha() or char == " ":
+            clean_text += char
+    words = clean_text.strip().lower().split()
+    unique_words = set(words)
+    word_frequencies = {word: words.count(word) for word in unique_words}
+    return word_frequencies
+
+# AI's optimized version:
+
+from collections import Counter
+def word_freq(text):
+    clean_text = "".join(c.lower() for c in text if c.isalpha() or c==" ")
+    words = clean_text.strip().split()
+    return dict(Counter(words))
