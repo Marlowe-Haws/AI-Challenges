@@ -1,0 +1,63 @@
+# Create a function (can use helper functions) that will find all the perfect numbers up to a maximum range.
+# A perfect number is a positive integer that is equal to the sum of all its proper divisors.
+# Ex. (6 = 1 + 2 + 3)
+# Difficulty: intermediate
+
+# My solution:
+import itertools
+import math
+
+def prime_factorization(n):
+    original = n
+    factors = []
+    divisor = 2
+
+    while n > 1:
+        if n % divisor == 0:
+            factors.append(divisor)
+            n /= divisor
+        else:
+            divisor += 1
+
+    divisors = generate_divisors(factors,original)
+    return divisors
+
+def generate_divisors(f, n):
+    unique_primes = set(f)
+    powers = [f.count(unique_primes) for unique_primes in unique_primes]
+    prime_powers = list(zip(unique_primes, powers))
+    prime_powers_dict = {key: [] for key in unique_primes}
+    for a, b in prime_powers:
+        for i in range(b + 1):
+            prime_powers_dict[a].append(a ** i)
+    extracted_powers = list(prime_powers_dict.values())
+    combinations = itertools.product(*extracted_powers)
+    products = []
+    for comb in combinations:
+        products.append(math.prod(comb))
+    divisors = [num for num in set(products) if num < n]
+    return divisors
+
+def is_perfect(n):
+    num = n
+    if sum(prime_factorization(num)) == n:
+        return True
+    else:
+        return False
+
+def perfect_finder(n):
+    try:
+        limit = int(n)
+    except ValueError:
+        print("Please enter a positive integer only.")
+        return None
+    perfect_nums = [a for a in range(1, limit +1) if is_perfect(a)]
+    if not perfect_nums:
+        print("No perfect numbers found.")
+        return None
+    else:
+        print(f"The perfect numbers in the range 1 to {limit} are {perfect_nums}")
+        return perfect_nums
+
+# This program is not very useful since perfect numbers are extremely rare and quickly require searching huge number ranges,
+# but it could be useful to use the portions for determining prime factorization and divisors. 
