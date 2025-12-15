@@ -1,0 +1,51 @@
+# Convert any string text input into the Pig Latin equivalent. Follow common ruleset: add 'way' to the end of words starting with vowels,
+# or move consonant clusters from the front of the word to the end of the word and add 'ay'. (You will need to deal with edge cases/punction)
+# Difficulty: intermediate
+
+# My solution:
+P = ".,!?"
+V = "aeiouAEIOU"
+
+def extract_p(p_word):
+    e_p = ""
+    cleaned = ""
+    for char in p_word:
+        if char in P:
+            e_p += char
+        else:
+            cleaned += char
+    return cleaned, e_p
+
+def find_v_i(c_word):
+    for i, char in enumerate(c_word):
+        if char in V:
+            return i
+
+def piggy(phrase):
+    words = phrase.split()
+    pigged = ""
+    for word in words:
+        v_t = False
+        if set(word).intersection(V):
+            v_t = True
+        if set(word).intersection(P) and len(word) > 2:
+            word, e_p = extract_p(word)
+        else:
+            e_p =""
+        if word[0] in V:
+            pigged += (word + "way" + e_p + " ")
+        elif v_t:
+            t = False
+            if word.istitle():
+                t = True
+            v_i = find_v_i(word)
+            cs = word[:v_i]
+            rest = word[v_i:]
+            composite = (rest + cs + "ay" + e_p + " ")
+            if t:
+                composite = composite.lower().title()
+            pigged += composite
+        else:
+            pigged += (word + " ")
+    final_pigged = pigged[:-1]
+    return final_pigged
