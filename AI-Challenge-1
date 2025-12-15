@@ -1,0 +1,14 @@
+# Write a function that will take a list of song names, sometimes with brackets in titles such as '[Live]', and various casings,
+# and return a list that removes anything between brackets and makes all letters lowercase. For empty items, return empty items.
+# Easy difficulty.
+
+# My solution
+def clean_phrase(phrase):
+    cleaned_phrase = []
+    for item in phrase:
+        new_item = re.sub(r"\[.*?\]", '', item).strip().lower()
+        cleaned_phrase.append(new_item)
+    return cleaned_phrase
+
+# Example test: print(clean_phrase(["Bohemian Rhapsody[live]","-STAIRWAY-to-heaven",""]))
+# Should return: ['bohemian rhapsody', '-stairway-to-heaven', '']
