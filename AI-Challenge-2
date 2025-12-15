@@ -1,0 +1,25 @@
+# Write a function that will take a string input and shift every vowel within the string forward one position in the list of vowels 'aeiou' (excluding y). 
+# Difficulty easy.
+
+# My solution:
+def shift_vowels(phrase):
+    shifted_phrase = ""
+    l_v = "aeiou"
+    u_v = "AEIOU"
+    for char in phrase:
+        if char in l_v:
+            i = l_v.index(char)
+            shifted_phrase += l_v[(i+1) % 5]
+        elif char in u_v:
+            i = u_v.index(char)
+            shifted_phrase += u_v[(i+1) % 5]
+        else:
+            shifted_phrase += char
+    return shifted_phrase
+
+# Example test: print(shift_vowels("Hello, Universe!"))
+# Should return: Hillu, Anovirsi!
+
+# Refined, AI one-liner solution:
+shift = lambda s: "".join('aeiouAEIOU'['aeiouAEIOU'.find(c)+1 if c in 'aeiouAEIOU' else 0] 
+                          if c in 'aeiouAEIOU' else c for c in s)
