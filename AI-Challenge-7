@@ -1,0 +1,88 @@
+# I'm going to include a few related challenges here. 
+# The AI was having me practice writing one-liner solutions and utilizing recursion.
+# First it had me make a factorial calculator,
+# Then a Fibonnaci calculator for the nth number in the sequence,
+# Then another Fibonnaci-style calculator given 2 initial values,
+# Then finding the nth number in a repeating sequence of numbers defined as *args.
+# Then it also had me utlize memoization for the resursive programs.
+
+# Factorial calculator (I'll include import used for all challenges):
+from functools import cache
+fact = cache(lambda x: x *fact(x-1) if x > 1 else 1)
+
+# Fibonacci calculator:
+
+fib = cache(lambda x: (fib(x-2) + fib(x-1)) if x > 2 else (1 if x > 1 else 0))
+
+# Seeded Fibonacci Calculator:
+
+fib_seeded = cache(lambda a, b, c: (fib_seeded(a, b, c-2) + fib_seeded(a, b, c-1)) if c > 2 else (b if c == 2 else a))
+
+# Calculator for nth number in cycling sequence:
+
+cycler = lambda n, *args: args[(n-1)%len(args)]
+
+# I learned the memoization is very useful for making these recursive functions much faster. 
+# There's also a lru_cache, which you might think would be better than cache because it only stores values up to a max.
+# Initially I thought maxsize=2 for the Fibonacci finder would be more efficient, but I learned there's overhead
+# for checking for last recently used values and it will actually be less efficient. 
+# It's basically only useful for web server/API calls and such, but for being strictly efficient with calculations,
+# you should just use iteration with no caching without recursion. The caching just helps recursion. 
+# Though the caching can be helpful if you keep doing repeated calculations which can use previouse calculations.
+# Iteration will always be faster for a single calculation though.
+# You don't need to worry about the cache getting too large in recursive applications, because basically always
+# the limit is going to be the recursion depth before the RAM needed for the cache. 
+
+# Factorial calculator without recursion:
+
+def fact(n):
+    answer = n
+    while n > 1:
+        answer *= n-1
+        n -= 1
+    return answer
+
+# This will be faster for one-time calculations than the recursive version. However:
+
+import math
+
+fact = lambda x: math.factorial(x)
+
+# This built-in function is going to be faster than either because it is written in C and uses advanced
+# binary-splitting techniques for faster processing.
+# When you use recursion, you're going to be hitting a wall because of the max recursion depth of 1,000 in python.
+# With that removed, the next wall is going to be an "integer-to-string" limit with your print statement of the result.
+# This is a built-in limit on any numbers exceeding 4,300 digits. To calculate results exceeding this,
+# (such as 1600! or higher), you'll need to import sys and modify it this way:
+
+import math
+import sys
+
+sys.set_int_max_str_digits(0)
+
+fact = lambda x: math.factorial(x)
+
+# At this point, rather than hitting a limit with RAM, you'll probably hit a limit with patience in the time it
+# takes to calculate this number and/or for the computer to convert the number to a readable format.
+# You might be able to bypass the issue with your GUI having trouble rendering the result by simply writing
+# the answer to a text file such as this:
+
+import math
+import sys
+
+sys.set_int_max_str_digits(0)
+
+def fact(n):
+    filename = f"factorial_of_{n}.txt"
+    result = math.factorial(n)
+
+    with open(filename, "w") as f:
+        f.write(str(result))
+    print(f"Calcuated factorial of {n} and saved to file '{filename}'")
+
+# At this point, the most resource-intensive part of this version of the function is the string conversion,
+# which could potentially max out your CPU rather than your RAM.
+# You could deal with this by printing out a raw binary output or 
+# hexadecimal result with bin(result) or hex(result), but for a human-readable text file,
+# the string conversion will be unavoidable. 
+    
